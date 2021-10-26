@@ -2,6 +2,7 @@ package dev.pengie.kotaro.graphics.shader
 
 import dev.pengie.kotaro.data.Color
 import dev.pengie.kotaro.graphics.Texture
+import dev.pengie.kotaro.graphics.shader.builder.ShaderBuilder
 import dev.pengie.kotaro.math.Matrix4f
 import dev.pengie.kotaro.math.Vector3f
 
@@ -21,6 +22,5 @@ interface Shader {
 }
 
 expect object ShaderFactory {
-    fun createMainShader(): Shader
-    fun createScreenShader(): Shader
+    fun createShader(builder: ShaderBuilder): Shader
 }

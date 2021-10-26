@@ -5,6 +5,9 @@ import dev.pengie.kotaro.math.Matrix4f
 import org.lwjgl.opengl.GL20.*
 import dev.pengie.kotaro.graphics.RenderSystem
 import dev.pengie.kotaro.graphics.Texture
+import dev.pengie.kotaro.graphics.shader.builder.ShaderBuilder
+import dev.pengie.kotaro.graphics.shader.builder.toSource
+import dev.pengie.kotaro.logging.logInfo
 import dev.pengie.kotaro.math.Vector3f
 
 const val MAIN_VERTEX = """
@@ -133,10 +136,15 @@ const val SCREEN_FRAGMENT = """
     }
     """
 
-class OpenGLShader(private val vertexSource: String, private val fragmentSource: String) : Shader {
+class OpenGLShader(builder: ShaderBuilder) : Shader {
     private var program: Int = 0;
 
+    val vertexSource = builder.vertexShader!!.toSource()
+    val fragmentSource = builder.fragmentShader!!.toSource()
+
     override fun init() {
+        //logInfo(vertexSource)
+        //logInfo(fragmentSource)
         program = glCreateProgram()
         val vertex = compileShader(vertexSource, GL_VERTEX_SHADER)
         val fragment = compileShader(fragmentSource, GL_FRAGMENT_SHADER)
@@ -158,7 +166,7 @@ class OpenGLShader(private val vertexSource: String, private val fragmentSource:
         glUseProgram(0)
     }
 
-    private fun getUniformLocation(name: String): Int = glGetUniformLocation(program, name)
+    private fun getUniformLocation(name: String): Int = glGetUniformLocation(program, "kotU_$name")
 
     override fun uniformBool(location: String, value: Boolean) {
         glUniform1i(getUniformLocation(location), if(value) 1 else 0)
@@ -202,6 +210,5 @@ class OpenGLShader(private val vertexSource: String, private val fragmentSource:
 }
 
 actual object ShaderFactory {
-    actual fun createMainShader(): Shader = OpenGLShader(MAIN_VERTEX, MAIN_FRAGMENT)
-    actual fun createScreenShader(): Shader = OpenGLShader(SCREEN_VERTEX, SCREEN_FRAGMENT)
+    actual fun createShader(builder: ShaderBuilder): Shader = OpenGLShader(builder)
 }

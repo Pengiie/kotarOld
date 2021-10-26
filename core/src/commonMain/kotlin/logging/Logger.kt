@@ -14,7 +14,7 @@ fun logWarning(message: String) = log(LogLevel.Warning, message)
 fun logError(message: String) = log(LogLevel.Error, message)
 fun logFatal(message: String) = log(LogLevel.Fatal, message)
 
-fun logFatalAndThrow(error: Error) {
+fun logFatalAndThrow(error: Exception) {
     error.message?.let(::logFatal)
     throw error
 }

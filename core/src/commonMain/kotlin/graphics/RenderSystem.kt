@@ -4,6 +4,7 @@ import dev.pengie.kotaro.Application
 import dev.pengie.kotaro.data.Color
 import dev.pengie.kotaro.graphics.shader.Shader
 import dev.pengie.kotaro.graphics.shader.ShaderFactory
+import dev.pengie.kotaro.graphics.shader.Shaders
 import dev.pengie.kotaro.graphics.shader.Uniforms
 import dev.pengie.kotaro.math.Vector3f
 import dev.pengie.kotaro.math.toMatrix4f
@@ -45,8 +46,8 @@ internal object RenderSystem : Disposable {
 
     internal fun init() {
         renderer = RendererFactory()
-        shader = ShaderFactory.createMainShader().apply(Shader::init)
-        screenShader = ShaderFactory.createScreenShader().apply(Shader::init)
+        shader = ShaderFactory.createShader(Shaders.Main).apply(Shader::init)
+        screenShader = ShaderFactory.createShader(Shaders.Screen).apply(Shader::init)
     }
 
     internal fun render(scene: SceneInstance) {
@@ -95,7 +96,7 @@ internal object RenderSystem : Disposable {
             renderer?.clearColor(camera.backgroundColor)
             renderer?.clearScreen()
 
-            shader?.uniformMatrix4f(Uniforms.PROJ_VIEW_MATRIX,
+            shader?.uniformMatrix4f("projViewMat",
                 (camera.projectionMatrix * cameraTransform.toViewMatrix()).toMatrix4f())
 
             for (entity in scene.createView(Transform::class, MeshFilter::class, MeshRenderer::class)) {
@@ -104,7 +105,7 @@ internal object RenderSystem : Disposable {
                 val meshFilter = scene.getComponent<MeshFilter>(entity)!!
                 val meshRenderer = scene.getComponent<MeshRenderer>(entity)!!
 
-                shader?.uniformMatrix4f(Uniforms.MODEL_MATRIX, transform.toModelMatrix())
+                shader?.uniformMatrix4f("modelMat", transform.toModelMatrix())
 
                 val hasTexture = meshRenderer.material.texture != null
                 shader?.uniformBool("material.doLighting", meshRenderer.material.lighting)
@@ -134,7 +135,7 @@ internal object RenderSystem : Disposable {
             val layer = camera.renderLayer
             val texture = layer.getTexture()
 
-            texture.bind()
+            screenShader?.uniformTexture("texture", texture)
             renderer?.begin()
             renderer?.render(ModelLibrary.getModel(screenMesh), null)
             renderer?.end()
