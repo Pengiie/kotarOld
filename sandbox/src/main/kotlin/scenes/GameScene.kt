@@ -16,6 +16,7 @@ import dev.pengie.kotaro.graphics.MeshFactory
 import dev.pengie.kotaro.graphics.Texture
 import dev.pengie.kotaro.input.Input
 import dev.pengie.kotaro.input.Key
+import dev.pengie.kotaro.logging.logInfo
 import dev.pengie.kotaro.math.*
 import dev.pengie.kotaro.scene.SceneInstance
 import dev.pengie.kotaro.scene.components.*
@@ -29,6 +30,7 @@ object GameScene : SceneInstance(0, AssetLibrary(
     asset("sun", Path("sun.png"), Texture::class, TextureConfig(Interpolation.LINEAR))
 )) {
     override fun init() {
+        logInfo("Starting main scene")
         Input.mouseLocked = true
         EventManager.registerListener(EventListener.create<KeyDownEvent> {
             if(it.key == Key.ESCAPE)

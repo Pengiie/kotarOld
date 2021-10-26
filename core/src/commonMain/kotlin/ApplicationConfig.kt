@@ -8,4 +8,5 @@ interface ApplicationConfig {
     var platform: Platform
     var width: Int
     var height: Int
+
 }
