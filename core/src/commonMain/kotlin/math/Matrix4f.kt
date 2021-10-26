@@ -24,6 +24,10 @@ class Matrix4f : Matrix4<Float>(0f, ArithmeticFloat) {
         m23 = z
     }
 
+    override fun rotate(quaternion: Quaternion) {
+        reassign((Matrix3f.rotationMatrix(quaternion).toMatrix4f() * this).toMatrix4f())
+    }
+
     override fun rotateX(angle: Float) {
         reassign((Matrix3f.rotationMatrixX(angle).toMatrix4f() * this).toMatrix4f())
     }

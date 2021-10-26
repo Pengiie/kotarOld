@@ -73,6 +73,20 @@ class Matrix3f : Matrix3<Float>(0f, ArithmeticFloat) {
                 m11 = 1f
                 m22 = 1f
             }
+        fun rotationMatrix(q: Quaternion): Matrix3f =
+            identity().apply {
+                m00 = 2 * (q.w*q.w + q.x*q.x) - 1f
+                m01 = 2 * (q.x * q.y - q.w * q.z)
+                m02 = 2 * (q.x * q.z + q.w * q.y)
+
+                m10 = 2 * (q.x * q.y + q.w * q.z)
+                m11 = 2 * (q.w * q.w + q.y * q.y) - 1f
+                m12 = 2 * (q.y * q.z - q.w * q.x)
+
+                m20 = 2 * (q.x * q.z - q.w * q.y)
+                m21 = 2 * (q.y * q.z + q.w * q.x)
+                m22 = 2 * (q.w * q.w + q.z * q.z) - 1f
+            }
         fun rotationMatrix(x: Float, y: Float, z: Float): Matrix3f =
             (rotationMatrixZ(x) * rotationMatrixY(y) * rotationMatrixX(z)).toMatrix3f()
         fun rotationMatrixX(angle: Float): Matrix3f =

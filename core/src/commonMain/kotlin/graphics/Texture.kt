@@ -1,5 +1,7 @@
 package dev.pengie.kotaro.graphics
 
+import dev.pengie.kotaro.data.ColorFormat
+import dev.pengie.kotaro.data.Interpolation
 import dev.pengie.kotaro.types.Disposable
 
 interface Texture : Disposable {
@@ -8,7 +10,13 @@ interface Texture : Disposable {
     fun unbind()
 }
 
-class TexData(val data: Array<Byte> = emptyArray(), val width: Int, val height: Int)
+class TexData(
+    val data: ByteArray = byteArrayOf(),
+    val width: Int,
+    val height: Int,
+    val format: ColorFormat = ColorFormat.RGBA,
+    var interpolation: Interpolation = Interpolation.LINEAR
+    )
 
 expect object TextureFactory {
     operator fun invoke(): Texture

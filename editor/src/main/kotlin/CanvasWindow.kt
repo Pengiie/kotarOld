@@ -1,11 +1,9 @@
 import androidx.compose.ui.unit.dp
 import dev.pengie.kotaro.Application
+import dev.pengie.kotaro.events.Event
 import dev.pengie.kotaro.events.EventListener
 import dev.pengie.kotaro.events.EventManager
-import dev.pengie.kotaro.events.input.KeyDownEvent
-import dev.pengie.kotaro.events.input.KeyUpEvent
-import dev.pengie.kotaro.events.input.MouseButtonDownEvent
-import dev.pengie.kotaro.events.input.MouseButtonUpEvent
+import dev.pengie.kotaro.events.input.*
 import dev.pengie.kotaro.events.window.WindowCloseEvent
 import dev.pengie.kotaro.events.window.WindowResizeEvent
 import dev.pengie.kotaro.input.Input
@@ -23,6 +21,7 @@ import org.lwjgl.opengl.awt.PlatformWin32GLCanvas
 import java.awt.event.*
 import kotlin.concurrent.thread
 import kotlin.math.roundToInt
+import kotlin.reflect.KClass
 
 class CanvasWindow : Window(0, 0) {
 
@@ -66,11 +65,15 @@ class CanvasWindow : Window(0, 0) {
         wrapper.disposeCanvas()
     }
 
+    @Suppress("UNCHECKED_CAST")
     internal inner class CanvasWrapper : AWTGLCanvas(GLData().apply {
         this.majorVersion = 3
         this.minorVersion = 2
         this.profile = GLData.Profile.CORE
     }) {
+        val queuedEvents: MutableList<EventDescriptor<Event>> = mutableListOf()
+
+        internal inner class EventDescriptor <T : Event> (val event: Event, val type: KClass<T>)
 
         init {
             addKeyListener(object : KeyAdapter() {
@@ -78,14 +81,14 @@ class CanvasWindow : Window(0, 0) {
                     if(e == null)
                         return
                     val key = canvasKeyMap[e.keyCode] ?: return
-                    EventManager.submitEvent(KeyDownEvent(key, hashSetOf()))
+                    queuedEvents.add(EventDescriptor(KeyDownEvent(key, hashSetOf()), KeyDownEvent::class) as EventDescriptor<Event>)
                 }
 
                 override fun keyReleased(e: KeyEvent?) {
                     if(e == null)
                         return
                     val key = canvasKeyMap[e.keyCode] ?: return
-                    EventManager.submitEvent(KeyUpEvent(key, hashSetOf()))
+                    queuedEvents.add(EventDescriptor(KeyUpEvent(key, hashSetOf()), KeyUpEvent::class) as EventDescriptor<Event>)
                 }
             })
 
@@ -94,12 +97,12 @@ class CanvasWindow : Window(0, 0) {
 
                 override fun mousePressed(e: MouseEvent?) {
                     if(e != null)
-                        EventManager.submitEvent(MouseButtonDownEvent(e.button))
+                        queuedEvents.add(EventDescriptor(MouseButtonDownEvent(e.button), MouseButtonDownEvent::class) as EventDescriptor<Event>)
                 }
 
                 override fun mouseReleased(e: MouseEvent?) {
                     if(e != null)
-                        EventManager.submitEvent(MouseButtonUpEvent(e.button))
+                        queuedEvents.add(EventDescriptor(MouseButtonUpEvent(e.button), MouseButtonUpEvent::class) as EventDescriptor<Event>)
                 }
 
                 override fun mouseEntered(e: MouseEvent?) {}
@@ -123,6 +126,12 @@ class CanvasWindow : Window(0, 0) {
                     this@CanvasWindow.mousePosition.y = e.y.toFloat()
                 }
             })
+
+            addMouseWheelListener {
+                if(it == null)
+                    return@addMouseWheelListener
+                queuedEvents.add(EventDescriptor(MouseScrollEvent(0f, it.preciseWheelRotation.toFloat()), MouseScrollEvent::class) as EventDescriptor<Event>)
+            }
         }
 
         override fun initGL() {
@@ -135,6 +144,8 @@ class CanvasWindow : Window(0, 0) {
             val h = framebufferHeight + 1
             if(this@CanvasWindow.width != w || this@CanvasWindow.height != h)
                 this@CanvasWindow.resize(w, h)
+            queuedEvents.forEach { EventManager.submitEvent(it.type, it.event)}
+            queuedEvents.clear()
             loop!!.invoke()
             swapBuffers()
         }

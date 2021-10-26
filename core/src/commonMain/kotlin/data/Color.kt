@@ -19,7 +19,25 @@ class Color(val r: Int, val g: Int, val b: Int, val a: Int) {
         (hex.toInt()) and 0xFF
     )
 
+    fun copy(): Color = Color(r, g, b, a)
+
     override fun toString(): String {
         return "[$r, $g, $b, $a]"
     }
+
+    companion object {
+        val White
+            get() = Color(0xFFFFFFFF)
+        val Black
+            get() = Color(0x000000FF)
+    }
+}
+
+enum class ColorFormat(val components: Int) {
+    G(1),
+    GA(2),
+    RGB(3),
+    RGBA(4);
+
+
 }

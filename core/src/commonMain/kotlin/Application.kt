@@ -27,14 +27,11 @@ object Application {
 
         this.window = window
         window.init()
-
-
         context.invoke {
-            RenderSystem.init()
-
             this.scene = SceneLibrary[startScene]
+            RenderSystem.init()
+            this.scene.assets.load()
             this.scene.init()
-
         }
         window.loop {
             Time.updateTimings()

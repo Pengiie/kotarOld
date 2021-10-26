@@ -29,6 +29,7 @@ abstract class Matrix4<T : Number>(zeroValue: T, private val arithmetic: Arithme
     abstract fun rotateX(angle: Float)
     abstract fun rotateY(angle: Float)
     abstract fun rotateZ(angle: Float)
+    abstract fun rotate(quaternion: Quaternion)
     fun rotate(x: Float, y: Float, z: Float) {
         rotateZ(x)
         rotateY(y)

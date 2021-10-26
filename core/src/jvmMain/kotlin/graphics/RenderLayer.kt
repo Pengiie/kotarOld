@@ -6,12 +6,15 @@ class OpenGLRenderLayer(width: Int, height: Int) : RenderLayer(width, height) {
 
     private var id: Int = -1
     private var texture: OpenGLTexture = OpenGLTexture()
+    private var depthTexture: OpenGLDepthTexture = OpenGLDepthTexture()
 
     override fun init() {
         id = glGenFramebuffers()
         bind()
         texture.init(TexData(width = width, height = height))
+        depthTexture.init(TexData(width = width, height = height))
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.id, 0)
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture.id, 0)
         unbind()
     }
 
@@ -27,6 +30,8 @@ class OpenGLRenderLayer(width: Int, height: Int) : RenderLayer(width, height) {
 
     override fun dispose() {
         glDeleteFramebuffers(id)
+        texture.dispose()
+        depthTexture.dispose()
     }
 
 }

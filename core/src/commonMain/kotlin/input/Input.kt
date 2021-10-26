@@ -3,10 +3,7 @@ package dev.pengie.kotaro.input
 import dev.pengie.kotaro.Application
 import dev.pengie.kotaro.events.EventListener
 import dev.pengie.kotaro.events.EventManager
-import dev.pengie.kotaro.events.input.KeyDownEvent
-import dev.pengie.kotaro.events.input.KeyUpEvent
-import dev.pengie.kotaro.events.input.MouseButtonDownEvent
-import dev.pengie.kotaro.events.input.MouseButtonUpEvent
+import dev.pengie.kotaro.events.input.*
 import dev.pengie.kotaro.math.Vector2f
 
 object Input {
@@ -26,6 +23,8 @@ object Input {
 
     // Local read-only property of the window's mouse position.
     val mousePosition by Application.window::mousePosition
+
+    val mouseScroll = Vector2f()
 
     fun isKeyPressed(key: Key, vararg modifier: Modifier): Boolean =
         keyPress.containsKey(key) && keyPress[key]!! == modifier.toHashSet()
@@ -81,12 +80,17 @@ object Input {
         mouseDown.remove(it.button)
     }
 
+    private val mouseScrollListener = EventListener.create<MouseScrollEvent> {
+        mouseScroll.x(it.dx).y(it.dy)
+    }
+
     init {
         EventManager.registerListener(keyDownListener)
         EventManager.registerListener(keyUpListener)
 
         EventManager.registerListener(mouseDownListener)
         EventManager.registerListener(mouseUpListener)
+        EventManager.registerListener(mouseScrollListener)
     }
 
     internal fun update() {
@@ -96,5 +100,7 @@ object Input {
 
         mousePress.clear()
         mouseRelease.clear()
+
+        mouseScroll.x(0f).y(0f)
     }
 }

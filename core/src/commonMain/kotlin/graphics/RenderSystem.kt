@@ -2,18 +2,16 @@ package dev.pengie.kotaro.graphics
 
 import dev.pengie.kotaro.Application
 import dev.pengie.kotaro.data.Color
-import dev.pengie.kotaro.events.EventListener
-import dev.pengie.kotaro.events.EventManager
-import dev.pengie.kotaro.events.window.WindowResizeEvent
 import dev.pengie.kotaro.graphics.shader.Shader
 import dev.pengie.kotaro.graphics.shader.ShaderFactory
 import dev.pengie.kotaro.graphics.shader.Uniforms
-import dev.pengie.kotaro.math.Matrix4f
+import dev.pengie.kotaro.math.Vector3f
 import dev.pengie.kotaro.math.toMatrix4f
-import dev.pengie.kotaro.scene.Entity
-import dev.pengie.kotaro.scene.Scene
 import dev.pengie.kotaro.scene.SceneInstance
 import dev.pengie.kotaro.scene.components.*
+import dev.pengie.kotaro.scene.components.light.AmbientLight
+import dev.pengie.kotaro.scene.components.light.DirectionalLight
+import dev.pengie.kotaro.scene.components.light.PointLight
 import dev.pengie.kotaro.types.Disposable
 
 private val screenMesh = Mesh(
@@ -41,6 +39,10 @@ internal object RenderSystem : Disposable {
     private var shader: Shader? = null
     private var screenShader: Shader? = null
 
+    const val LIGHT_AMBIENT_COUNT = 20
+    const val LIGHT_POINT_COUNT = 20
+    const val LIGHT_DIRECTIONAL_COUNT = 20
+
     internal fun init() {
         renderer = RendererFactory()
         shader = ShaderFactory.createMainShader().apply(Shader::init)
@@ -48,6 +50,39 @@ internal object RenderSystem : Disposable {
     }
 
     internal fun render(scene: SceneInstance) {
+        shader?.start()
+
+        for((i, lightEntity) in scene.createView(AmbientLight::class).withIndex()) {
+            if(i >= LIGHT_AMBIENT_COUNT)
+                break
+            val light = scene.getComponent<AmbientLight>(lightEntity)!!
+            val color = Vector3f(light.color.r.toFloat() / 255f, light.color.g.toFloat() / 255f, light.color.b.toFloat() / 255f)
+            shader?.uniformVector3f("ambientLights[$i].color", color)
+            shader?.uniformFloat("ambientLights[$i].strength", light.strength)
+        }
+
+        for((i, lightEntity) in scene.createView(PointLight::class, Transform::class).withIndex()) {
+            if(i >= LIGHT_POINT_COUNT)
+                break
+            val light = scene.getComponent<PointLight>(lightEntity)!!
+            val transform = scene.getComponent<Transform>(lightEntity)!!
+            val color = Vector3f(light.color.r.toFloat() / 255f, light.color.g.toFloat() / 255f, light.color.b.toFloat() / 255f)
+            shader?.uniformVector3f("pointLights[$i].position", transform.position)
+            shader?.uniformVector3f("pointLights[$i].color", color)
+            shader?.uniformFloat("pointLights[$i].strength", light.strength)
+        }
+
+        for((i, lightEntity) in scene.createView(DirectionalLight::class, Transform::class).withIndex()) {
+            if(i >= LIGHT_DIRECTIONAL_COUNT)
+                break
+            val light = scene.getComponent<DirectionalLight>(lightEntity)!!
+            val transform = scene.getComponent<Transform>(lightEntity)!!
+            val color = Vector3f(light.color.r.toFloat() / 255f, light.color.g.toFloat() / 255f, light.color.b.toFloat() / 255f)
+            shader?.uniformVector3f("directionalLights[$i].direction", transform.rotation.rotate(Vector3f.forward))
+            shader?.uniformVector3f("directionalLights[$i].color", color)
+            shader?.uniformFloat("directionalLights[$i].strength", light.strength)
+        }
+
         for(cameraEntity in scene.createView(Transform::class, Camera::class)) {
             val cameraTransform = scene.getComponent<Transform>(cameraEntity)!!
             val camera = scene.getComponent<Camera>(cameraEntity)!!
@@ -60,8 +95,6 @@ internal object RenderSystem : Disposable {
             renderer?.clearColor(camera.backgroundColor)
             renderer?.clearScreen()
 
-            shader?.start()
-
             shader?.uniformMatrix4f(Uniforms.PROJ_VIEW_MATRIX,
                 (camera.projectionMatrix * cameraTransform.toViewMatrix()).toMatrix4f())
 
@@ -73,14 +106,22 @@ internal object RenderSystem : Disposable {
 
                 shader?.uniformMatrix4f(Uniforms.MODEL_MATRIX, transform.toModelMatrix())
 
+                val hasTexture = meshRenderer.material.texture != null
+                shader?.uniformBool("material.doLighting", meshRenderer.material.lighting)
+                shader?.uniformBool("material.hasTexture", hasTexture)
+                shader?.uniformColor("material.color", meshRenderer.material.color)
+                if(hasTexture)
+                    shader?.uniformTexture("material.texture", meshRenderer.material.texture!!)
+
+
                 renderer?.render(ModelLibrary.getModel(meshFilter.mesh), meshRenderer)
                 renderer?.end()
             }
 
-            shader?.stop()
-
             renderLayer.unbind()
         }
+
+        shader?.stop()
 
         renderer?.bindWindowLayer()
         renderer?.viewport(Application.window.width, Application.window.height)

@@ -3,10 +3,10 @@ package dev.pengie.kotaro.graphics
 object MeshFactory {
     fun createPlane(): Mesh = Mesh(
         vertices = mutableListOf(
-            0f, 0f, 0f,
-            1f, 0f, 0f,
-            0f, 1f, 0f,
-            1f, 1f, 0f
+            -0.5f, -0.5f, -0.5f,
+            0.5f, -0.5f, -0.5f,
+            -0.5f, 0.5f, -0.5f,
+            0.5f, 0.5f, -0.5f
         ),
         textureCoords = mutableListOf(
             0f, 0f,
@@ -29,40 +29,40 @@ object MeshFactory {
     fun createCube(): Mesh = Mesh(
         vertices = mutableListOf(
             // Bottom
-            0f, 0f, 0f,
-            1f, 0f, 0f,
-            0f, 0f, 1f,
-            1f, 0f, 1f,
+            -0.5f, -0.5f, -0.5f,
+            0.5f, -0.5f, -0.5f,
+            -0.5f, -0.5f, 0.5f,
+            0.5f, -0.5f, 0.5f,
 
             // Top
-            0f, 1f, 0f,
-            1f, 1f, 0f,
-            0f, 1f, 1f,
-            1f, 1f, 1f,
+            -0.5f, 0.5f, -0.5f,
+            0.5f, 0.5f, -0.5f,
+            -0.5f, 0.5f, 0.5f,
+            0.5f, 0.5f, 0.5f,
 
             // Left
-            1f, 0f, 0f,
-            1f, 1f, 0f,
-            1f, 0f, 1f,
-            1f, 1f, 1f,
+            0.5f, -0.5f, -0.5f,
+            0.5f, 0.5f, -0.5f,
+            0.5f, -0.5f, 0.5f,
+            0.5f, 0.5f, 0.5f,
 
             // Right
-            0f, 0f, 0f,
-            0f, 1f, 0f,
-            0f, 0f, 1f,
-            0f, 1f, 1f,
+            -0.5f, -0.5f, -0.5f,
+            -0.5f, 0.5f, -0.5f,
+            -0.5f, -0.5f, 0.5f,
+            -0.5f, 0.5f, 0.5f,
 
             // Front
-            0f, 0f, 0f,
-            1f, 0f, 0f,
-            0f, 1f, 0f,
-            1f, 1f, 0f,
+            -0.5f, -0.5f, -0.5f,
+            0.5f, -0.5f, -0.5f,
+            -0.5f, 0.5f, -0.5f,
+            0.5f, 0.5f, -0.5f,
 
             // Back
-            0f, 0f, 1f,
-            1f, 0f, 1f,
-            0f, 1f, 1f,
-            1f, 1f, 1f,
+            -0.5f, -0.5f, 0.5f,
+            0.5f, -0.5f, 0.5f,
+            -0.5f, 0.5f, 0.5f,
+            0.5f, 0.5f, 0.5f,
         ),
         textureCoords = mutableListOf(
             // Bottom
@@ -100,6 +100,43 @@ object MeshFactory {
             1f, 0f,
             0f, 1f,
             1f, 1f,
+        ),
+        normals = mutableListOf(
+            // Bottom
+            0f, -1f, 0f,
+            0f, -1f, 0f,
+            0f, -1f, 0f,
+            0f, -1f, 0f,
+
+            // Top
+            0f, 1f, 0f,
+            0f, 1f, 0f,
+            0f, 1f, 0f,
+            0f, 1f, 0f,
+
+            // Left
+            1f, 0f, 0f,
+            1f, 0f, 0f,
+            1f, 0f, 0f,
+            1f, 0f, 0f,
+
+            // Right
+            -1f, 0f, 0f,
+            -1f, 0f, 0f,
+            -1f, 0f, 0f,
+            -1f, 0f, 0f,
+
+            // Front
+            0f, 0f, -1f,
+            0f, 0f, -1f,
+            0f, 0f, -1f,
+            0f, 0f, -1f,
+
+            // Back
+            0f, 0f, 1f,
+            0f, 0f, 1f,
+            0f, 0f, 1f,
+            0f, 0f, 1f
         ),
         indices = mutableListOf(
             // Bottom

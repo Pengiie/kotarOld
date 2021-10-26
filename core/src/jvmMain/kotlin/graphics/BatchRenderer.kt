@@ -10,6 +10,7 @@ import org.lwjgl.system.MemoryUtil.NULL
 class OpenGLBatchRenderer : BatchRenderer<OpenGLModel>() {
     private var cullFacesMode: Boolean? = null
     private var wireframeMode: Boolean? = null
+    private var depthTestMode: Boolean? = null
 
     override fun bindWindowLayer() {
         glBindFramebuffer(GL_FRAMEBUFFER, 0)
@@ -20,7 +21,7 @@ class OpenGLBatchRenderer : BatchRenderer<OpenGLModel>() {
     }
 
     override fun clearScreen() {
-        glClear(GL_COLOR_BUFFER_BIT)
+        glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
     }
 
     override fun clearColor(color: Color) {
@@ -40,6 +41,10 @@ class OpenGLBatchRenderer : BatchRenderer<OpenGLModel>() {
                     glCullFace(GL_BACK)
                 } else
                     glDisable(GL_CULL_FACE)
+            }
+            if(depthTestMode == null) {
+                depthTestMode = true
+                glEnable(GL_DEPTH_TEST)
             }
             model.bind()
             glEnableVertexAttribArray(0)

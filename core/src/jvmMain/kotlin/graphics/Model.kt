@@ -25,6 +25,7 @@ class OpenGLModel : Model() {
         createEbo(mesh.indices)
         createAttrib(0, 3, mesh.vertices)
         createAttrib(1, 2, mesh.textureCoords)
+        createAttrib(2, 3, mesh.normals)
     }
 
     fun bind() { glBindVertexArray(vao) }

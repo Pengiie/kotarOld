@@ -9,6 +9,7 @@ import dev.pengie.kotaro.graphics.RenderLayer
 import dev.pengie.kotaro.graphics.RenderLayerFactory
 import dev.pengie.kotaro.graphics.RenderSystem
 import dev.pengie.kotaro.math.Matrix4f
+import dev.pengie.kotaro.math.toRadians
 import dev.pengie.kotaro.types.Disposable
 
 enum class ProjectionType {
@@ -39,7 +40,7 @@ class Camera (
     private fun createProjectionMatrix(width: Int, height: Int): Matrix4f =
         if(projection == ProjectionType.Perspective)
             Matrix4f.perspective(
-                fov,
+                fov.toRadians(),
                 width.toFloat() / height.toFloat(),
                 nearPlane,
                 farPlane
