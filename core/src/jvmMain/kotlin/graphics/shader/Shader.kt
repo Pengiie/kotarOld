@@ -1,14 +1,13 @@
 package dev.pengie.kotaro.graphics.shader
 
 import dev.pengie.kotaro.data.Color
-import dev.pengie.kotaro.math.Matrix4f
-import org.lwjgl.opengl.GL20.*
 import dev.pengie.kotaro.graphics.RenderSystem
 import dev.pengie.kotaro.graphics.Texture
 import dev.pengie.kotaro.graphics.shader.builder.ShaderBuilder
 import dev.pengie.kotaro.graphics.shader.builder.toSource
-import dev.pengie.kotaro.logging.logInfo
+import dev.pengie.kotaro.math.Matrix4f
 import dev.pengie.kotaro.math.Vector3f
+import org.lwjgl.opengl.GL20.*
 
 const val MAIN_VERTEX = """
     #version 400 core
@@ -137,7 +136,7 @@ const val SCREEN_FRAGMENT = """
     """
 
 class OpenGLShader(builder: ShaderBuilder) : Shader {
-    private var program: Int = 0;
+    private var program: Int = 0
 
     val vertexSource = builder.vertexShader!!.toSource()
     val fragmentSource = builder.fragmentShader!!.toSource()
@@ -196,6 +195,10 @@ class OpenGLShader(builder: ShaderBuilder) : Shader {
         glUniform1i(getUniformLocation(location), 0)
         glActiveTexture(0)
         texture.bind()
+    }
+
+    override fun dispose() {
+        glDeleteProgram(program)
     }
 
     private fun compileShader(source: String, type: Int): Int {

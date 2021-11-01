@@ -5,8 +5,9 @@ import dev.pengie.kotaro.graphics.Texture
 import dev.pengie.kotaro.graphics.shader.builder.ShaderBuilder
 import dev.pengie.kotaro.math.Matrix4f
 import dev.pengie.kotaro.math.Vector3f
+import dev.pengie.kotaro.types.Disposable
 
-interface Shader {
+interface Shader : Disposable {
     fun init()
     fun start()
     fun stop()

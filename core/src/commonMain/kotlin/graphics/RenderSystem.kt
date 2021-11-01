@@ -1,11 +1,9 @@
 package dev.pengie.kotaro.graphics
 
 import dev.pengie.kotaro.Application
-import dev.pengie.kotaro.data.Color
 import dev.pengie.kotaro.graphics.shader.Shader
 import dev.pengie.kotaro.graphics.shader.ShaderFactory
 import dev.pengie.kotaro.graphics.shader.Shaders
-import dev.pengie.kotaro.graphics.shader.Uniforms
 import dev.pengie.kotaro.math.Vector3f
 import dev.pengie.kotaro.math.toMatrix4f
 import dev.pengie.kotaro.scene.SceneInstance
@@ -15,26 +13,11 @@ import dev.pengie.kotaro.scene.components.light.DirectionalLight
 import dev.pengie.kotaro.scene.components.light.PointLight
 import dev.pengie.kotaro.types.Disposable
 
-private val screenMesh = Mesh(
-    vertices = mutableListOf(
-        -1f, -1f, 0f,
-         1f, -1f, 0f,
-        -1f,  1f, 0f,
-         1f,  1f, 0f
-    ),
-    textureCoords = mutableListOf(
-        0f, 0f,
-        1f, 0f,
-        0f, 1f,
-        1f, 1f
-    ),
-    indices = mutableListOf(
-        0, 1, 2,
-        2, 1, 3
-    )
-)
 
 internal object RenderSystem : Disposable {
+
+    private val renderers: MutableList<Renderer> = mutableListOf()
+    private val screenRenderer: ScreenRenderer = ScreenRenderer()
 
     private var renderer: BatchRenderer<Model>? = null
     private var shader: Shader? = null
@@ -48,6 +31,8 @@ internal object RenderSystem : Disposable {
         renderer = RendererFactory()
         shader = ShaderFactory.createShader(Shaders.Main).apply(Shader::init)
         screenShader = ShaderFactory.createShader(Shaders.Screen).apply(Shader::init)
+
+        screenRenderer.init()
     }
 
     internal fun render(scene: SceneInstance) {
@@ -124,24 +109,7 @@ internal object RenderSystem : Disposable {
 
         shader?.stop()
 
-        renderer?.bindWindowLayer()
-        renderer?.viewport(Application.window.width, Application.window.height)
-        renderer?.clearColor(Color(0x000000FF))
-        renderer?.clearScreen()
-        screenShader?.start()
-
-        if(scene.mainCamera != null) {
-            val camera = scene.getComponent<Camera>(scene.mainCamera!!)!!
-            val layer = camera.renderLayer
-            val texture = layer.getTexture()
-
-            screenShader?.uniformTexture("texture", texture)
-            renderer?.begin()
-            renderer?.render(ModelLibrary.getModel(screenMesh), null)
-            renderer?.end()
-            texture.unbind()
-        }
-        screenShader?.stop()
+        screenRenderer.render(scene)
     }
 
     override fun dispose() {

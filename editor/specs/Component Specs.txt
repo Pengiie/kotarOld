@@ -1,0 +1,35 @@
+Every component 4 letter identifier starts with a "C"
+
+Transform - CTRM
+4 bytes - Position X
+4 bytes - Position Y
+4 bytes - Position Z
+
+4 bytes - Rotation W
+4 bytes - Rotation X
+4 bytes - Rotation Y
+4 bytes - Rotation Z
+
+4 bytes - Scale X
+4 bytes - Scale Y
+4 bytes - Scale Z
+
+MeshFilter - CMFR
+n bytes - Mesh Name will null termination
+
+Camera - CCMA
+1 byte - Projection Type, 0 - Orthographic, 1 - Projection
+4 bytes - FOV
+4 bytes - Near Plane
+4 bytes - Far Plane
+4 bytes - Background Color
+
+Ambient Light - CLAM
+
+4 bytes - Color
+4 bytes - Strength
+
+Directional Light - CLDR
+
+4 bytes - Color
+4 bytes - Strength

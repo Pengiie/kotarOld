@@ -1,26 +1,17 @@
-import androidx.compose.ui.unit.dp
 import dev.pengie.kotaro.Application
 import dev.pengie.kotaro.events.Event
-import dev.pengie.kotaro.events.EventListener
 import dev.pengie.kotaro.events.EventManager
 import dev.pengie.kotaro.events.input.*
-import dev.pengie.kotaro.events.window.WindowCloseEvent
-import dev.pengie.kotaro.events.window.WindowResizeEvent
-import dev.pengie.kotaro.input.Input
 import dev.pengie.kotaro.input.Key
+import dev.pengie.kotaro.scene.components.Tag
 import dev.pengie.kotaro.window.Window
-import dev.pengie.kotaro.window.glfwKeyMap
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import org.lwjgl.glfw.GLFW
+import editor.EditorState
+import editor.components.sceneExplorer.SceneExplorerItem
 import org.lwjgl.opengl.GL
-import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.awt.AWTGLCanvas
 import org.lwjgl.opengl.awt.GLData
-import org.lwjgl.opengl.awt.PlatformWin32GLCanvas
 import java.awt.event.*
 import kotlin.concurrent.thread
-import kotlin.math.roundToInt
 import kotlin.reflect.KClass
 
 class CanvasWindow : Window(0, 0) {
@@ -144,9 +135,17 @@ class CanvasWindow : Window(0, 0) {
             val h = framebufferHeight + 1
             if(this@CanvasWindow.width != w || this@CanvasWindow.height != h)
                 this@CanvasWindow.resize(w, h)
-            queuedEvents.forEach { EventManager.submitEvent(it.type, it.event)}
+            val events = queuedEvents.toList()
+            events.forEach { EventManager.submitEvent(it.type, it.event)}
             queuedEvents.clear()
             loop!!.invoke()
+
+            val scene = SceneExplorerItem(Presence.presence!!.project.scenes[Presence.presence!!.currentScene!!].name, -1, 0)
+            val entityList = Application.scene.createView(Tag::class).map {
+                SceneExplorerItem(Application.scene.getComponent<Tag>(it)!!.name, it, 1)
+            }
+            EditorState.sceneList = listOf(scene, *(entityList.toTypedArray()))
+
             swapBuffers()
         }
     }

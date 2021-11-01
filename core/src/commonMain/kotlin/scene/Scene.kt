@@ -7,9 +7,10 @@ open class Scene : Disposable {
     val entities: MutableList<Entity> = mutableListOf()
     val poolMap: MutableMap<KClass<*>, ComponentPool<*>> = mutableMapOf()
 
-    fun createEntity(): Entity = entities.size.apply {
+    fun createEntity(builder: EntityBuilder.() -> Unit = {}): Entity = entities.size.apply {
         entities.add(entities.size)
         poolMap.values.forEach { it.indices.add(-1) }
+        builder.invoke(EntityBuilder(this@Scene, this))
     }
 
     fun removeEntity(entity: Entity) {

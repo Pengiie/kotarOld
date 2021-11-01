@@ -2,7 +2,7 @@ package dev.pengie.kotaro.math
 
 import kotlin.math.sqrt
 
-class Vector3f(x: Float, y: Float, z: Float) : Vector3<Float>(x, y, z, ArithmeticFloat) {
+open class Vector3f(x: Float, y: Float, z: Float) : Vector3<Float>(x, y, z, ArithmeticFloat) {
     constructor() : this(0f)
     constructor(value: Float) : this(value, value, value)
 

@@ -1,0 +1,26 @@
+Header
+
+4 bytes   KTOP
+1 byte    0x0
+
+Chunk
+
+4 bytes - Chunk Name
+4 bytes - Chunk Length
+n bytes - Chunk Data
+
+PRSE - Project Data Chunk
+
+n bytes - Project Name, ending with a termination character
+n bytes - Production Name, ending with a termination character
+n bytes - Asset Directory, ending with a termination character
+
+
+SCEN - Scene Chunk
+
+n bytes - Scene Name, ending with a termination character
+
+ENTT - Entity Chunk
+
+n bytes - Entity Name, ending with a termination character
+

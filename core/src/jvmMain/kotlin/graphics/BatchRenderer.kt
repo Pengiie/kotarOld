@@ -1,16 +1,14 @@
 package dev.pengie.kotaro.graphics
 
 import dev.pengie.kotaro.data.Color
-import org.lwjgl.opengl.GL11
-import org.lwjgl.opengl.GL20.*
 import org.lwjgl.opengl.GL30.*
-import org.lwjgl.system.MemoryStack
 import org.lwjgl.system.MemoryUtil.NULL
 
+private var cullFacesMode: Boolean? = null
+private var wireframeMode: Boolean? = null
+private var depthTestMode: Boolean? = null
+
 class OpenGLBatchRenderer : BatchRenderer<OpenGLModel>() {
-    private var cullFacesMode: Boolean? = null
-    private var wireframeMode: Boolean? = null
-    private var depthTestMode: Boolean? = null
 
     override fun bindWindowLayer() {
         glBindFramebuffer(GL_FRAMEBUFFER, 0)

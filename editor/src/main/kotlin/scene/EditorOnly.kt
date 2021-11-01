@@ -1,0 +1,3 @@
+package scene
+
+class EditorOnly

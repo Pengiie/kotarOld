@@ -7,7 +7,6 @@ import dev.pengie.kotaro.events.EventManager
 import dev.pengie.kotaro.events.window.WindowResizeEvent
 import dev.pengie.kotaro.graphics.RenderLayer
 import dev.pengie.kotaro.graphics.RenderLayerFactory
-import dev.pengie.kotaro.graphics.RenderSystem
 import dev.pengie.kotaro.math.Matrix4f
 import dev.pengie.kotaro.math.toRadians
 import dev.pengie.kotaro.types.Disposable
@@ -18,12 +17,33 @@ enum class ProjectionType {
 }
 
 class Camera (
-    val projection: ProjectionType = ProjectionType.Perspective,
-    val fov: Float = 90f,
-    val nearPlane: Float = 0.1f,
-    val farPlane: Float = 1000f,
+    projection: ProjectionType = ProjectionType.Perspective,
+    fov: Float = 90f,
+    nearPlane: Float = 0.1f,
+    farPlane: Float = 1000f,
     val backgroundColor: Color = Color(0x4D5DB8FF)
 ) : Disposable {
+    var projection: ProjectionType = projection
+        set(value) {
+            field = value
+            createProjectionMatrix(Application.window.width, Application.window.height)
+        }
+    var fov: Float = fov
+        set(value) {
+            field = value
+            createProjectionMatrix(Application.window.width, Application.window.height)
+        }
+    var nearPlane: Float = nearPlane
+        set(value) {
+            field = value
+            createProjectionMatrix(Application.window.width, Application.window.height)
+        }
+    var farPlane: Float = farPlane
+        set(value) {
+            field = value
+            createProjectionMatrix(Application.window.width, Application.window.height)
+        }
+
     var renderLayer = RenderLayerFactory(Application.window.width, Application.window.height).apply(RenderLayer::init)
         private set
     var projectionMatrix: Matrix4f = createProjectionMatrix(Application.window.width, Application.window.height)

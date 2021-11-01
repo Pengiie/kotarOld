@@ -16,19 +16,29 @@ object EditorScene : SceneInstance(EDITOR_SCENE, AssetLibrary()) {
 
     override fun init() {
         this.mainCamera = createEntity().apply {
+            addComponent(this, EditorOnly())
             addComponent(this, Transform(position = Vector3f(-1f, 2f, 2f), rotation = Quaternion.euler(0f, -20f, 0f)))
             addComponent(this, Camera(backgroundColor = Color(0x6E7075FF)))
             addComponent(this, Script(EditorCamera()))
         }
         createEntity().apply {
+            addComponent(this, Tag("Main Camera"))
+            addComponent(this, Transform(position = Vector3f(0f, 2f, -2f), rotation = Quaternion.euler(0f, -20f, 0f)))
+            addComponent(this, Camera(backgroundColor = Color(0x6E7075FF)))
+            addComponent(this, Script(EditorCamera()))
+        }
+        createEntity().apply {
+            addComponent(this, Tag("Cube"))
             addComponent(this, Transform(position = Vector3f(0f, 0f, -3f)))
             addComponent(this, MeshFilter(MeshFactory.createCube()))
             addComponent(this, MeshRenderer())
         }
         createEntity().apply {
+            addComponent(this, Tag("Ambient Light"))
             addComponent(this, AmbientLight(strength = 0.2f))
         }
         createEntity().apply {
+            addComponent(this, Tag("Directional Light"))
             addComponent(this, Transform(rotation = Quaternion.euler(50f, 25f, 0f), scale = Vector3f(0.25f, 0.25f, 0.5f)))
             addComponent(this, DirectionalLight())
             addComponent(this, MeshFilter(MeshFactory.createCube()))

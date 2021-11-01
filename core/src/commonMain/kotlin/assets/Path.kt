@@ -7,7 +7,7 @@ class Path(val fullPath: String) {
     val path: String
 
     init {
-        val split = fullPath.split("/")
+        val split = fullPath.split("/", "\\")
         val last = split[split.lastIndex]
         if(last.contains('.')) {
             val p = last.split('.')
