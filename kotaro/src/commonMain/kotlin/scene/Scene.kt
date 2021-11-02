@@ -1,5 +1,7 @@
 package dev.pengie.kotaro.scene
 
+import dev.pengie.kotaro.scene.components.hierarchy.Children
+import dev.pengie.kotaro.scene.components.hierarchy.Parent
 import dev.pengie.kotaro.types.Disposable
 import kotlin.reflect.KClass
 
@@ -44,6 +46,23 @@ open class Scene : Disposable {
 
     inline fun <reified T> removeComponent(entity: Entity) {
         getComponentPool<T>().removeComponent(entity)
+    }
+
+    fun setParent(parent: Entity?, child: Entity) {
+        if(parent == null) {
+            if(hasComponent<Parent>(child)) {
+                val p = getComponent<Parent>(child)!!.parent
+                getComponent<Children>(p)!!.children.remove(child)
+                removeComponent<Parent>(child)
+            }
+        } else {
+            if (!hasComponent<Children>(parent))
+                addComponent(parent, Children())
+            getComponent<Children>(parent)!!.children.add(child)
+            if (!hasComponent<Parent>(child))
+                addComponent(child, Parent(parent))
+            getComponent<Parent>(child)!!.parent = parent
+        }
     }
 
     fun createView(vararg components: KClass<*>): SceneView = SceneView(this, *components)

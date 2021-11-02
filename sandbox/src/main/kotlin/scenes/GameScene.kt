@@ -36,9 +36,10 @@ object GameScene : SceneInstance(0, AssetLibrary(
             if(it.key == Key.ESCAPE)
                 Input.mouseLocked = !Input.mouseLocked
         })
-        val cameraTransform = Transform()
+        var cameraTransform: Transform
         createEntity().apply {
             mainCamera = this
+            cameraTransform = Transform(this@GameScene, this)
             addComponent(this, cameraTransform)
             addComponent(this, Camera())
             addComponent(this, Script(object : EntityBehaviour() {
@@ -74,7 +75,7 @@ object GameScene : SceneInstance(0, AssetLibrary(
             }))
         }
         createEntity().apply {
-            addComponent(this, Transform(position = Vector3f(0f, 0f, -1f)))
+            addComponent(this, Transform(this@GameScene, this, position = Vector3f(0f, 0f, -1f)))
             addComponent(this, MeshFilter(MeshFactory.createCube()))
             addComponent(this, MeshRenderer(material = Material(texture = assets.getAsset<Texture>("dirt")), wireframe = false, cullFaces = true))
             addComponent(this, Script(object : EntityBehaviour() {
@@ -96,7 +97,7 @@ object GameScene : SceneInstance(0, AssetLibrary(
             }))
         }
         createEntity().apply {
-            addComponent(this, Transform(position = Vector3f(0f, 0f, 2f)))
+            addComponent(this, Transform(this@GameScene, this, position = Vector3f(0f, 0f, 2f)))
             addComponent(this, MeshFilter(MeshFactory.createPlane()))
             addComponent(this, MeshRenderer(material = Material(texture = assets.getAsset("sun"), lighting = false), cullFaces = false))
             addComponent(this, PointLight(strength = 7f))

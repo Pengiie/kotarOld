@@ -2,6 +2,8 @@ import org.jetbrains.compose.compose
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+version = "1.0-SNAPSHOT"
+
 plugins {
     kotlin("jvm") version "1.5.21"
     id("org.jetbrains.compose") version "1.0.0-alpha3"
@@ -15,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":core"))
+    implementation(project(":kotaro"))
     implementation(compose.desktop.currentOs)
 
     val lwjglVersion = "3.2.3"

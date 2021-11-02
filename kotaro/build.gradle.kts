@@ -1,11 +1,13 @@
 import org.gradle.internal.os.OperatingSystem
 
 plugins {
+    id("maven-publish")
     kotlin("multiplatform") version "1.5.30"
 }
 
-kotlin {
+version = "1.0-SNAPSHOT"
 
+kotlin {
     jvm {
         compilations.all {
             kotlinOptions.jvmTarget = "1.8"
@@ -29,8 +31,8 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 val lwjglVersion = "3.2.3"
-                val lwjglNatives = when(org.gradle.internal.os.OperatingSystem.current()) {
-                    org.gradle.internal.os.OperatingSystem.WINDOWS -> "natives-windows"
+                val lwjglNatives = when(OperatingSystem.current()) {
+                    OperatingSystem.WINDOWS -> "natives-windows"
                     else -> throw Error("Unrecognized or unsupported Operating system. Please set \"lwjglNatives\" manually")
                 }
 
@@ -39,6 +41,23 @@ kotlin {
                     runtimeOnly("org.lwjgl:lwjgl$it:$lwjglVersion:$lwjglNatives")
                 }
             }
+        }
+    }
+
+    publishing {
+        repositories {
+            maven {
+                url = uri(
+                    if(version.toString().endsWith("SNAPSHOT"))
+                        ""
+                    else
+                        ""
+                )
+
+            }
+        }
+        publications {
+
         }
     }
 }

@@ -1,5 +1,5 @@
-rootProject.name = "kotaro"
-include("core")
+rootProject.name = "kotaro-root"
+include("kotaro")
 include("editor")
 
 pluginManagement {
