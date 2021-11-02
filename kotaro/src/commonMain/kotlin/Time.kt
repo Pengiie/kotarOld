@@ -19,7 +19,7 @@ object Time {
      * Updates application timings, requires window to be initialized beforehand.
      */
     internal fun updateTimings() {
-        val currentTime = Application.window!!.getTime().toFloat()
+        val currentTime = Application.window.getTime().toFloat()
 
         deltaTime = currentTime - lastTime
         fps = (1f / deltaTime).toInt()

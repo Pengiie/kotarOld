@@ -12,6 +12,11 @@ class EntityBuilder(val scene: Scene, val id: Int) {
             addComponent(this)
         }
 
+    fun child(builder: EntityBuilder.() -> Unit): Entity =
+        scene.createEntity(builder).apply {
+            setParent(id)
+        }
+
     fun setParent(parent: Entity) {
         scene.setParent(parent, id)
     }

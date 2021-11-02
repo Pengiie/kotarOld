@@ -8,7 +8,7 @@ object ImageParser {
     fun parsePNG(bytes: ByteArray): TexData {
         val width = Bytes.toInt(bytes[0x10], bytes[0x11], bytes[0x12], bytes[0x13])
         val height = Bytes.toInt(bytes[0x14], bytes[0x15], bytes[0x16], bytes[0x17])
-        val bitDepth = bytes[0x18].toInt()
+        //val bitDepth = bytes[0x18].toInt()
         val colorType: ColorFormat = when (bytes[0x19].toInt()) {
             0 -> ColorFormat.G
             2 -> ColorFormat.RGB

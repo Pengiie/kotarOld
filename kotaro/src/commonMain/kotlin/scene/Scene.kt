@@ -1,5 +1,6 @@
 package dev.pengie.kotaro.scene
 
+import dev.pengie.kotaro.logging.logInfo
 import dev.pengie.kotaro.scene.components.hierarchy.Children
 import dev.pengie.kotaro.scene.components.hierarchy.Parent
 import dev.pengie.kotaro.types.Disposable
@@ -27,7 +28,7 @@ open class Scene : Disposable {
             val master = entities
             ComponentPool<T>().apply {
                 poolMap[T::class] = this
-                this.indices.addAll(List(master.size) { 0 })
+                this.indices.addAll(List(master.size) { -1 })
             }
         }
 

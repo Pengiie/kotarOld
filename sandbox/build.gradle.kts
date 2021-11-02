@@ -5,6 +5,6 @@ plugins {
 version = "1.0-SNAPSHOT"
 
 dependencies {
-    implementation(kotlin("stdlib"))
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.31")
     implementation(project(":kotaro"))
 }

@@ -7,9 +7,11 @@ import dev.pengie.kotaro.scene.components.Script
 internal object ScriptSystem {
     fun update(scene: Scene) {
         for(entity in scene.createView(Script::class)) {
-            val script = scene.getComponent<Script>(entity)!!.script
-            ScriptLibrary.start(entity, script, scene)
-            script.update()
+            val scripts = scene.getComponent<Script>(entity)!!.scripts
+            scripts.forEach {
+                ScriptLibrary.start(entity, it, scene)
+                it.update()
+            }
         }
     }
 
