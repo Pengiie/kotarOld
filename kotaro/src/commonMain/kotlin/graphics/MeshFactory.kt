@@ -3,10 +3,10 @@ package dev.pengie.kotaro.graphics
 object MeshFactory {
     fun createPlane(): Mesh = Mesh(
         vertices = mutableListOf(
-            -0.5f, -0.5f, -0.5f,
-            0.5f, -0.5f, -0.5f,
-            -0.5f, 0.5f, -0.5f,
-            0.5f, 0.5f, -0.5f
+            -0.5f, 0f, -0.5f,
+            -0.5f, 0f, 0.5f,
+            0.5f, 0f, -0.5f,
+            0.5f, 0f, 0.5f
         ),
         textureCoords = mutableListOf(
             0f, 0f,
@@ -15,10 +15,10 @@ object MeshFactory {
             1f, 1f
         ),
         normals = mutableListOf(
-          0f, 0f, 1f,
-          0f, 0f, 1f,
-          0f, 0f, 1f,
-          0f, 0f, 1f,
+          0f, 1f, 0f,
+          0f, 1f, 0f,
+          0f, 1f, 0f,
+          0f, 1f, 0f,
         ),
         indices = mutableListOf(
             0, 1, 2,

@@ -11,17 +11,12 @@ import dev.pengie.kotaro.graphics.TextureFactory
 import dev.pengie.kotaro.utils.IO
 import dev.pengie.kotaro.utils.ImageParser
 
-class TextureLoader : AssetLoader<Texture, TextureConfig> {
+class TextureLoader : AssetLoader<Texture> {
     private var texData: TexData? = null
 
-    override fun loadAsync(path: Path, config: TextureConfig?) {
+    override fun loadAsync(path: Path) {
         val bytes = IO.readBytes(path)
-        texData = when(path.extension) {
-            "png" -> ImageParser.parsePNG(bytes)
-            else -> throw Exception("File type ${path.extension} not supported for texture loading")
-        }
-        texData = ImageParser.parsePNG(bytes)
-        texData!!.interpolation = (config ?: TextureConfig()).interpolation
+        texData = ImageParser.parse(bytes)
     }
 
     override fun loadSync(): Texture {
@@ -34,4 +29,4 @@ object TextureLoaderFactory : AssetLoaderFactory<TextureLoader> {
 }
 
 @Suppress("UNCHECKED_CAST")
-fun TextureLoaderFactory.cast(): AssetLoaderFactory<AssetLoader<Texture, AssetConfig<Texture>>> = this as AssetLoaderFactory<AssetLoader<Texture, AssetConfig<Texture>>>
+fun TextureLoaderFactory.cast(): AssetLoaderFactory<AssetLoader<Texture>> = this as AssetLoaderFactory<AssetLoader<Texture>>

@@ -9,6 +9,12 @@ object Time {
         private set
 
     /**
+     * The total application time in seconds
+     */
+    var time: Float = 0f
+        private set
+
+    /**
      * The instantaneous frames per second
      */
     var fps: Int = 0
@@ -19,12 +25,12 @@ object Time {
      * Updates application timings, requires window to be initialized beforehand.
      */
     internal fun updateTimings() {
-        val currentTime = Application.window.getTime().toFloat()
+        time = Application.window.getTime().toFloat()
 
-        deltaTime = currentTime - lastTime
+        deltaTime = time - lastTime
         fps = (1f / deltaTime).toInt()
 
-        lastTime = currentTime
+        lastTime = time
     }
 
 }

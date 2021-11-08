@@ -1,6 +1,7 @@
 package dev.pengie.kotaro.scene
 
 import dev.pengie.kotaro.logging.logInfo
+import dev.pengie.kotaro.scene.components.Tag
 import dev.pengie.kotaro.scene.components.hierarchy.Children
 import dev.pengie.kotaro.scene.components.hierarchy.Parent
 import dev.pengie.kotaro.types.Disposable

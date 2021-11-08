@@ -16,8 +16,7 @@ actual object ZLib {
     actual fun decompress(arr: ByteArray, expectedSize: Int): ByteArray = Inflater().run {
         var out = ByteArray(expectedSize)
         this.setInput(arr)
-        val size = this.inflate(out)
-       // out = out.copyOfRange(0, size - 1)
+        this.inflate(out)
         this.end()
         return out
     }

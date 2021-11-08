@@ -4,6 +4,7 @@ import dev.pengie.kotaro.data.Color
 import dev.pengie.kotaro.graphics.Texture
 import dev.pengie.kotaro.graphics.shader.builder.ShaderBuilder
 import dev.pengie.kotaro.math.Matrix4f
+import dev.pengie.kotaro.math.Vector2f
 import dev.pengie.kotaro.math.Vector3f
 import dev.pengie.kotaro.types.Disposable
 
@@ -14,6 +15,7 @@ interface Shader : Disposable {
 
     fun uniformBool(location: String, value: Boolean)
     fun uniformFloat(location: String, value: Float)
+    fun uniformVector2f(location: String, vector: Vector2f)
     fun uniformVector3f(location: String, vector: Vector3f)
     //fun uniformVector4f(location: String, vector: Vector4f)
     fun uniformMatrix4f(location: String, matrix: Matrix4f)

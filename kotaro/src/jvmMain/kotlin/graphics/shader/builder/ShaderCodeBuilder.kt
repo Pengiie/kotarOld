@@ -90,8 +90,14 @@ private fun processExpression(exp: ShaderExpression): String = when(exp) {
     is ShaderNormalize -> "normalize(${processExpression(exp.vec)})"
     is ShaderUnary -> "!${processExpression(exp.exp)}"
 
+    // Built Ins
+    is ShaderFragPos -> "gl_FragCoord"
+
     // Functions
+    is ShaderSin -> "sin(${processExpression(exp.exp)})"
+    is ShaderCos -> "cos(${processExpression(exp.exp)})"
     is ShaderTexture -> "texture(${processExpression(exp.sampler)}, ${processExpression(exp.coordinate)})"
+    is ShaderMix -> "mix(${processExpression(exp.a)}, ${processExpression(exp.b)}, ${processExpression(exp.weight)})"
     is ShaderFunctionCall -> {
         val builder = StringBuilder("${exp.function.name}(")
         exp.args.forEachIndexed { index, shaderExpression ->

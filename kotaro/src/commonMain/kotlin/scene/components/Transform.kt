@@ -75,12 +75,12 @@ class EulerAngles(private val transform: Transform, angles: Vector3f) : Vector3f
 fun Transform.toModelMatrix(): Matrix4f =
     Matrix4f.identity().also {
         it.scale(this.scale.x, this.scale.y, this.scale.z)
-        it.rotate(rotation)
-        it.translate(this.position.x, this.position.y, this.position.z)
+        it.rotate(globalRotation)
+        it.translate(this.globalPosition.x, this.globalPosition.y, this.globalPosition.z)
     }
 
 fun Transform.toViewMatrix(): Matrix4f =
     Matrix4f.identity().also {
-        it.translate(-this.position.x, -this.position.y, -this.position.z)
-        it.rotate(rotation.inverse())
+        it.translate(-this.globalPosition.x, -this.globalPosition.y, -this.globalPosition.z)
+        it.rotate(globalRotation.inverse())
     }

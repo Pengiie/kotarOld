@@ -6,6 +6,7 @@ import dev.pengie.kotaro.graphics.Texture
 import dev.pengie.kotaro.graphics.shader.builder.ShaderBuilder
 import dev.pengie.kotaro.graphics.shader.builder.toSource
 import dev.pengie.kotaro.math.Matrix4f
+import dev.pengie.kotaro.math.Vector2f
 import dev.pengie.kotaro.math.Vector3f
 import org.lwjgl.opengl.GL20.*
 
@@ -173,6 +174,10 @@ class OpenGLShader(builder: ShaderBuilder) : Shader {
 
     override fun uniformFloat(location: String, value: Float) {
         glUniform1f(getUniformLocation(location), value)
+    }
+
+    override fun uniformVector2f(location: String, vector: Vector2f) {
+        glUniform2f(getUniformLocation(location), vector.x, vector.y)
     }
 
     override fun uniformVector3f(location: String, vector: Vector3f) {

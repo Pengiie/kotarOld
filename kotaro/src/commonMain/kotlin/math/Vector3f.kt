@@ -17,6 +17,8 @@ open class Vector3f(x: Float, y: Float, z: Float) : Vector3<Float>(x, y, z, Arit
 
     fun normalize(): Vector3f = this.copy().apply {
         val length = length()
+        if(length == 0f)
+            return@apply
         x /= length
         y /= length
         z /= length

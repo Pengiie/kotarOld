@@ -19,7 +19,7 @@ enum class ProjectionType {
 class Camera (
     projection: ProjectionType = ProjectionType.Perspective,
     fov: Float = 90f,
-    nearPlane: Float = 0.1f,
+    nearPlane: Float = 0.05f,
     farPlane: Float = 1000f,
     val backgroundColor: Color = Color(0x4D5DB8FF)
 ) : Disposable {

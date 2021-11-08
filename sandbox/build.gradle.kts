@@ -1,10 +1,26 @@
 plugins {
-    kotlin("jvm") version "1.5.31"
+    kotlin("multiplatform") version "1.5.30"
+}
+
+repositories {
+    mavenCentral()
 }
 
 version = "1.0-SNAPSHOT"
 
-dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.31")
-    implementation(project(":kotaro"))
+kotlin {
+    jvm {
+        compilations.all {
+            kotlinOptions.jvmTarget = "1.8"
+        }
+    }
+
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation(kotlin("stdlib-common"))
+                implementation(project(":kotaro"))
+            }
+        }
+    }
 }

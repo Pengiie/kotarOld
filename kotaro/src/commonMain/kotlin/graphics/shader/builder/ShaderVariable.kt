@@ -5,11 +5,15 @@ import dev.pengie.kotaro.logging.logFatalAndThrow
 
 open class ShaderVariable(val name: String, val type: ShaderVariableType) : ShaderExpression {
     operator fun get(property: String): ShaderVariable {
-        if(this.type.type != ShaderVariablePrimitiveType.STRUCT)
-            logFatalAndThrow(ShaderException("Variable $name could not access member of a non-struct"))
-        val propertyType = this.type.struct!!.members.find { it.name == property }
+        val propertyType = when(this.type.type) {
+            ShaderVariablePrimitiveType.STRUCT -> this.type.struct!!.members.find { it.name == property }
+            ShaderVariablePrimitiveType.VEC4 -> ShaderVariable(property, ShaderVariableType(ShaderVariablePrimitiveType.FLOAT))
+            ShaderVariablePrimitiveType.VEC3 -> ShaderVariable(property, ShaderVariableType(ShaderVariablePrimitiveType.FLOAT))
+            ShaderVariablePrimitiveType.VEC2 -> ShaderVariable(property, ShaderVariableType(ShaderVariablePrimitiveType.FLOAT))
+            else -> null
+        }
         if(propertyType == null)
-            logFatalAndThrow(ShaderException("Property $property doesn't exist for struct ${this.type.struct!!.name}"))
+            logFatalAndThrow(ShaderException("Property $property doesn't exist for variable ${this.type.struct!!.name}"))
         return ShaderVariable("$name.$property", propertyType!!.type)
     }
 

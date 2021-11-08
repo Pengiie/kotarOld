@@ -44,6 +44,8 @@ class OpenGLBatchRenderer : BatchRenderer<OpenGLModel>() {
                 depthTestMode = true
                 glEnable(GL_DEPTH_TEST)
             }
+            glEnable(GL_BLEND)
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
             model.bind()
             glEnableVertexAttribArray(0)
             glEnableVertexAttribArray(1)

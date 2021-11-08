@@ -12,6 +12,7 @@ import dev.pengie.kotaro.events.EventListener
 import dev.pengie.kotaro.events.EventManager
 import dev.pengie.kotaro.events.input.KeyDownEvent
 import dev.pengie.kotaro.graphics.Material
+import dev.pengie.kotaro.graphics.Mesh
 import dev.pengie.kotaro.graphics.MeshFactory
 import dev.pengie.kotaro.graphics.Texture
 import dev.pengie.kotaro.input.Input
@@ -26,8 +27,9 @@ import dev.pengie.kotaro.script.EntityBehaviour
 import dev.pengie.kotaro.utils.toAny
 
 object GameScene : SceneInstance(0, AssetLibrary(
-    asset("dirt", Path("dirt.png"), Texture::class, TextureConfig(Interpolation.NEAREST)),
-    asset("sun", Path("sun.png"), Texture::class, TextureConfig(Interpolation.LINEAR))
+    asset("dirt", "dirt.png", Texture::class),
+    asset("sun", "sun.png", Texture::class),
+    asset("room", "Room.obj", Mesh::class)
 )) {
     override fun init() {
         logInfo("Starting main scene")
@@ -75,9 +77,9 @@ object GameScene : SceneInstance(0, AssetLibrary(
             }))
         }
         createEntity().apply {
-            addComponent(this, Transform(this@GameScene, this, position = Vector3f(0f, 0f, -1f)))
-            addComponent(this, MeshFilter(MeshFactory.createCube()))
-            addComponent(this, MeshRenderer(material = Material(texture = assets.getAsset<Texture>("dirt")), wireframe = false, cullFaces = true))
+            addComponent(this, Transform(this@GameScene, this))
+            addComponent(this, MeshFilter(assets.getAsset("room")))
+            addComponent(this, MeshRenderer(cullFaces = true))
             addComponent(this, Script(object : EntityBehaviour() {
                 private lateinit var transform: Transform
                 private val speed = 45f
@@ -98,9 +100,7 @@ object GameScene : SceneInstance(0, AssetLibrary(
         }
         createEntity().apply {
             addComponent(this, Transform(this@GameScene, this, position = Vector3f(0f, 0f, 2f)))
-            addComponent(this, MeshFilter(MeshFactory.createPlane()))
-            addComponent(this, MeshRenderer(material = Material(texture = assets.getAsset("sun"), lighting = false), cullFaces = false))
-            addComponent(this, PointLight(strength = 7f))
+            addComponent(this, PointLight(strength = 3f))
             addComponent(this, Script(object: EntityBehaviour() {
                 private lateinit var transform: Transform
                 private val speed = 1f

@@ -2,6 +2,7 @@ package dev.pengie.kotaro.scene
 
 import dev.pengie.kotaro.math.Quaternion
 import dev.pengie.kotaro.math.Vector3f
+import dev.pengie.kotaro.scene.components.Tag
 import dev.pengie.kotaro.scene.components.Transform
 
 typealias Entity = Int
@@ -12,9 +13,14 @@ class EntityBuilder(val scene: Scene, val id: Int) {
             addComponent(this)
         }
 
+    fun name(name: String): Tag =
+        Tag(name).apply {
+            addComponent(this)
+        }
+
     fun child(builder: EntityBuilder.() -> Unit): Entity =
         scene.createEntity(builder).apply {
-            setParent(id)
+            scene.setParent(id, this)
         }
 
     fun setParent(parent: Entity) {

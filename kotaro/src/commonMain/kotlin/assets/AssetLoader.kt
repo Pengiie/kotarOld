@@ -1,7 +1,7 @@
 package dev.pengie.kotaro.assets
 
-interface AssetLoader<T : Any, R: AssetConfig<T>> {
-    fun loadAsync(path: Path, config: R?)
+interface AssetLoader<T : Any> {
+    fun loadAsync(path: Path)
     fun loadSync(): T
 }
 

@@ -6,7 +6,7 @@ import kotlinx.coroutines.launch
 
 class LoadingTask <T: Any>(
     val asset: AssetManager.AssetDescriptor<Any>,
-    val loader: AssetLoader<T, AssetConfig<T>>,
+    val loader: AssetLoader<T>,
     val scope: CoroutineScope,
     val callback: (T) -> Unit
 ) {
@@ -18,7 +18,7 @@ class LoadingTask <T: Any>(
     fun update(): Boolean {
         if(job == null) {
             job = scope.launch {
-                loader.loadAsync(asset.filePath, asset.config as AssetConfig<T>?)
+                loader.loadAsync(asset.filePath)
             }
         } else if(job!!.isCompleted) {
             loadedAsset = loader.loadSync()

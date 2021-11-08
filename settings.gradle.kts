@@ -11,3 +11,4 @@ pluginManagement {
 
 }
 include("sandbox")
+include("asset-converter")
